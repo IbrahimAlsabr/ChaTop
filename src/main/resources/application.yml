@@ -1,7 +1,0 @@
-app:
-  jwt:
-    secret: please-change-this-to-a-strong-256-bit-secret
-    issuer: JWT_ISSUER-my-issuer
-    exp-min: 60
-
-

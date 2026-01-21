@@ -36,9 +36,9 @@ public class SecurityConfig {
 								"/api/auth/login",
 								"/api/auth/register",
 								"/v3/api-docs/**",
-								"/swagger-ui.html", "/swagger-ui/**")
+								"/swagger-ui.html",
+								"/swagger-ui/**")
 						.permitAll()
-						.requestMatchers("/developer/**").hasRole("DEVELOPER")
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(
 						oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
