@@ -2,11 +2,13 @@ package com.example.rentals_backend.service;
 
 import java.time.LocalDateTime;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.rentals_backend.config.SecurityConfig;
 import com.example.rentals_backend.dto.LoginRequest;
@@ -45,6 +47,10 @@ public class AuthService {
 	}
 
 	public SignupResponse signup(SignupRequest signupRequest) {
+		if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+		}
+
 		UserEntity user = new UserEntity();
 		user.setEmail(signupRequest.getEmail());
 		user.setName(signupRequest.getName());
