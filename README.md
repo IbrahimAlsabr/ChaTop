@@ -103,6 +103,10 @@ This architecture ensures maintainability, testability, and follows Spring Boot 
 - `POST /api/auth/register` - User registration
 - `GET /api/auth/me` - Get current user profile
 
+### Users
+
+- `GET /api/user/{id}` - Get user by ID (authenticated)
+
 ### Rentals
 
 - `GET /api/rentals` - Get all rental properties
@@ -249,6 +253,10 @@ Cette architecture assure la maintenabilité, la testabilité et suit les meille
 - `POST /api/auth/login` - Connexion utilisateur
 - `POST /api/auth/register` - Inscription utilisateur
 - `GET /api/auth/me` - Obtenir le profil de l'utilisateur actuel
+
+### Utilisateurs
+
+- `GET /api/user/{id}` - Obtenir un utilisateur par ID (authentifié)
 
 ### Locations
 
