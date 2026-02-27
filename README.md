@@ -49,15 +49,16 @@ cd rentals-backend
 
 1. Create a MySQL database named `rentals_database`
 2. Update the database credentials in `src/main/resources/application.properties`:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/rentals_database
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   ```
+    ```properties
+    spring.datasource.url=jdbc:mysql://localhost:3306/rentals_database
+    spring.datasource.username=your_username
+    spring.datasource.password=your_password
+    ```
 
 ### 3. Build and Run
 
 #### Using Maven Wrapper (Recommended)
+
 ```bash
 # On Windows
 ./mvnw.cmd spring-boot:run
@@ -67,6 +68,7 @@ cd rentals-backend
 ```
 
 #### Using Maven (if installed globally)
+
 ```bash
 mvn spring-boot:run
 ```
@@ -76,6 +78,7 @@ The application will start on `http://localhost:8080`
 ## API Documentation
 
 Once the application is running, you can access the interactive API documentation at:
+
 - **Swagger UI**: `http://localhost:8080/swagger-ui.html`
 - **OpenAPI JSON**: `http://localhost:8080/v3/api-docs`
 
@@ -95,19 +98,20 @@ This architecture ensures maintainability, testability, and follows Spring Boot 
 ## API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login` - User login
 - `POST /api/auth/register` - User registration
 - `GET /api/auth/me` - Get current user profile
 
 ### Rentals
+
 - `GET /api/rentals` - Get all rental properties
 - `GET /api/rentals/{id}` - Get rental by ID
 - `POST /api/rentals` - Create new rental (authenticated)
 - `PUT /api/rentals/{id}` - Update rental (authenticated)
-- `DELETE /api/rentals/{id}` - Delete rental (authenticated)
 
 ### Messages
-- `GET /api/messages` - Get user messages (authenticated)
+
 - `POST /api/messages` - Send message (authenticated)
 
 ## Building for Production
@@ -192,15 +196,16 @@ cd rentals-backend
 
 1. Créez une base de données MySQL nommée `rentals_database`
 2. Mettez à jour les identifiants de la base de données dans `src/main/resources/application.properties` :
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/rentals_database
-   spring.datasource.username=votre_nom_utilisateur
-   spring.datasource.password=votre_mot_de_passe
-   ```
+    ```properties
+    spring.datasource.url=jdbc:mysql://localhost:3306/rentals_database
+    spring.datasource.username=votre_nom_utilisateur
+    spring.datasource.password=votre_mot_de_passe
+    ```
 
 ### 3. Construction et Exécution
 
 #### Utilisation du Maven Wrapper (Recommandé)
+
 ```bash
 # Sur Windows
 ./mvnw.cmd spring-boot:run
@@ -210,6 +215,7 @@ cd rentals-backend
 ```
 
 #### Utilisation de Maven (si installé globalement)
+
 ```bash
 mvn spring-boot:run
 ```
@@ -219,6 +225,7 @@ L'application démarrera sur `http://localhost:8080`
 ## Documentation API
 
 Une fois l'application en cours d'exécution, vous pouvez accéder à la documentation interactive de l'API à :
+
 - **Swagger UI** : `http://localhost:8080/swagger-ui.html`
 - **OpenAPI JSON** : `http://localhost:8080/v3/api-docs`
 
@@ -238,19 +245,20 @@ Cette architecture assure la maintenabilité, la testabilité et suit les meille
 ## Points de Terminaison API
 
 ### Authentification
+
 - `POST /api/auth/login` - Connexion utilisateur
 - `POST /api/auth/register` - Inscription utilisateur
 - `GET /api/auth/me` - Obtenir le profil de l'utilisateur actuel
 
 ### Locations
+
 - `GET /api/rentals` - Obtenir toutes les propriétés locatives
 - `GET /api/rentals/{id}` - Obtenir une location par ID
 - `POST /api/rentals` - Créer une nouvelle location (authentifié)
 - `PUT /api/rentals/{id}` - Mettre à jour une location (authentifié)
-- `DELETE /api/rentals/{id}` - Supprimer une location (authentifié)
 
 ### Messages
-- `GET /api/messages` - Obtenir les messages de l'utilisateur (authentifié)
+
 - `POST /api/messages` - Envoyer un message (authentifié)
 
 ## Construction pour la Production

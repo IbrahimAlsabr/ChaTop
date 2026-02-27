@@ -19,11 +19,13 @@ import com.example.rentals_backend.entity.RentalEntity;
 import com.example.rentals_backend.service.RentalService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("api/rentals")
 @Tag(name = "Rental", description = "Rental API")
+@SecurityRequirement(name = "bearerAuth")
 public class RentalController {
 
 	private final RentalService rentalService;

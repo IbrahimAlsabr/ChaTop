@@ -10,12 +10,14 @@ import com.example.rentals_backend.dto.MessageResponse;
 import com.example.rentals_backend.service.MessageService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/messages")
 @Tag(name = "Message", description = "Message API")
+@SecurityRequirement(name = "bearerAuth")
 public class MessageController {
 
 	private final MessageService messageService;

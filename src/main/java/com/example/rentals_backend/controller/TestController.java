@@ -14,10 +14,4 @@ public class TestController {
 	public String test() {
 		return "Hello World";
 	}
-
-	@Operation(summary = "Developer API", description = "Developer API")
-	@GetMapping("/developer")
-	public String admin() {
-		return "Hello developer";
-	}
 }

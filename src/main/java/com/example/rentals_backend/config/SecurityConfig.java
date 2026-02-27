@@ -25,19 +25,19 @@ public class SecurityConfig {
 		this.customUserDetailsService = customUserDetailsService;
 	}
 
-	@Bean
+@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(
+							   	"/v3/api-docs/**",
+								"/swagger-ui.html", 
+								"/swagger-ui/**",
 								"/test/**",
 								"/api/auth/login",
-								"/api/auth/register",
-								"/v3/api-docs/**",
-								"/swagger-ui.html",
-								"/swagger-ui/**")
+								"/api/auth/register")
 						.permitAll()
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(
@@ -61,6 +61,7 @@ public class SecurityConfig {
 		return converter;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Bean
 	public DaoAuthenticationProvider daoAuthenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
