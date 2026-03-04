@@ -9,5 +9,5 @@ import lombok.Data;
 @Schema(description = "Data Transfer Object (DTO) for representing authentication response.")
 public class LoginResponse {
 	@Schema(description = "The token of the user.")
-	private String access_token;
+	private String token;
 }

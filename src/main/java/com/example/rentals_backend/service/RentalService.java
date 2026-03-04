@@ -1,11 +1,14 @@
 package com.example.rentals_backend.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.rentals_backend.dto.RentalDetailResponse;
 import com.example.rentals_backend.dto.RentalResponse;
 import com.example.rentals_backend.entity.RentalEntity;
 import com.example.rentals_backend.repository.RentalRepository;
@@ -33,23 +36,30 @@ public class RentalService {
 							rental.getId(),
 							rental.getName(),
 							rental.getSurface(),
-							rental.getPrice(),
+							(int) rental.getPrice(),
 							rental.getPicture(),
-							rental.getDescription()));
+							rental.getDescription(),
+							rental.getOwner() == null ? null : rental.getOwner().getId(),
+							toLocalDate(rental.getCreatedAt()),
+							toLocalDate(rental.getUpdatedAt())));
 		}
 		return rentalResponses;
 	}
 
-	public RentalResponse getRentalById(Long id) {
-		RentalEntity rental = rentalRepository.findById(id).orElse(null);
+	public RentalDetailResponse getRentalById(Long id) {
+		RentalEntity rental = rentalRepository.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Rental not found with id " + id));
 
-		return new RentalResponse(
+		return new RentalDetailResponse(
 				rental.getId(),
 				rental.getName(),
 				rental.getSurface(),
-				rental.getPrice(),
-				rental.getPicture(),
-				rental.getDescription());
+				(int) rental.getPrice(),
+				rental.getPicture() == null ? List.of() : List.of(rental.getPicture()),
+				rental.getDescription(),
+				rental.getOwner() == null ? null : rental.getOwner().getId(),
+				toLocalDate(rental.getCreatedAt()),
+				toLocalDate(rental.getUpdatedAt()));
 
 	}
 
@@ -68,6 +78,7 @@ public class RentalService {
 		rental.setSurface(surface);
 		rental.setPrice(price);
 		rental.setDescription(description);
+		rental.setUpdatedAt(LocalDateTime.now());
 
 		if (picture != null && !picture.isEmpty()) {
 			rental.setPicture("uploads/" + picture.getOriginalFilename());
@@ -89,9 +100,17 @@ public class RentalService {
 		rental.setSurface(surface);
 		rental.setPrice(price);
 		rental.setDescription(description);
-		rental.setPicture("uploads/" + picture.getOriginalFilename());
+		rental.setCreatedAt(LocalDateTime.now());
+		rental.setUpdatedAt(LocalDateTime.now());
+		if (picture != null && !picture.isEmpty()) {
+			rental.setPicture("uploads/" + picture.getOriginalFilename());
+		}
 
 		return rentalRepository.save(rental);
+	}
+
+	private static LocalDate toLocalDate(LocalDateTime value) {
+		return value == null ? null : value.toLocalDate();
 	}
 
 }

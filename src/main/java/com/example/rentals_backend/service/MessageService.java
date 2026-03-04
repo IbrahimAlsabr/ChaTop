@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
+import com.example.rentals_backend.dto.ApiMessageResponse;
 import com.example.rentals_backend.dto.MessageRequest;
-import com.example.rentals_backend.dto.MessageResponse;
 import com.example.rentals_backend.entity.MessageEntity;
 import com.example.rentals_backend.repository.MessageRepository;
 
@@ -18,7 +18,7 @@ public class MessageService {
 		this.messageRepository = messageRepository;
 	}
 
-	public MessageResponse createMessage(MessageRequest messageRequest) {
+	public ApiMessageResponse createMessage(MessageRequest messageRequest) {
 		MessageEntity messageEntity = new MessageEntity();
 		messageEntity.setMessage(messageRequest.getMessage());
 		messageEntity.setUserId(messageRequest.getUserId());
@@ -26,14 +26,8 @@ public class MessageService {
 		messageEntity.setCreatedAt(LocalDateTime.now());
 		messageEntity.setUpdatedAt(LocalDateTime.now());
 
-		MessageEntity saved = messageRepository.save(messageEntity);
-
-		return new MessageResponse(
-				saved.getId(),
-				saved.getMessage(),
-				saved.getCreatedAt(),
-				saved.getUserId(),
-				saved.getRentalId());
+		messageRepository.save(messageEntity);
+		return new ApiMessageResponse("Message send with success");
 	}
 
 }

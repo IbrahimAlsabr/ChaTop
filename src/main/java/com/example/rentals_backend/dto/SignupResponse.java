@@ -8,12 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Schema(description = "Data Transfer Object (DTO) for representing signup response.")
 public class SignupResponse {
-	@Schema(description = "The unique identifier of the user.", example = "0")
-	private Long id;
-
-	@Schema(description = "The email address of the user.", example = "user@example.com")
-	private String email;
-
-	@Schema(description = "The name of the user.", example = "User Example")
-	private String name;
+	@Schema(description = "The token of the user.")
+	private String token;
 }

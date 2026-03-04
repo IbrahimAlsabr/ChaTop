@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.rentals_backend.dto.ApiMessageResponse;
 import com.example.rentals_backend.dto.MessageRequest;
-import com.example.rentals_backend.dto.MessageResponse;
 import com.example.rentals_backend.service.MessageService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +28,7 @@ public class MessageController {
  
 	@Operation(summary = "Create message", description = "Create message")
 	@PostMapping
-	public MessageResponse createMessage(@Valid @RequestBody MessageRequest messageRequest) {
+	public ApiMessageResponse createMessage(@Valid @RequestBody MessageRequest messageRequest) {
 		return messageService.createMessage(messageRequest);
 	}
 

@@ -3,6 +3,7 @@ package com.example.rentals_backend.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @Schema(description = "Data Transfer Object (DTO) for representing user information.")
@@ -18,9 +19,11 @@ public class UserDTO {
 	private String email;
 
 	@Schema(description = "The date when the user was created.", example = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
 	private LocalDate created_at;
 
 	@Schema(description = "The date when the user was last updated.", example = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
 	private LocalDate updated_at;
 }
 

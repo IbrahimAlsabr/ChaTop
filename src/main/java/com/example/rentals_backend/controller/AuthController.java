@@ -17,6 +17,7 @@ import com.example.rentals_backend.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/auth")
@@ -31,13 +32,13 @@ public class AuthController {
 
 	@Operation(summary = "Login API", description = "Login API")
 	@PostMapping("/login")
-	public LoginResponse login(@RequestBody LoginRequest userDTO) {
-		return authService.login(userDTO);
+	public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) {
+		return authService.login(loginRequest);
 	}
 
 	@Operation(summary = "Register API", description = "Register API")
 	@PostMapping("/register")
-	public SignupResponse signup(@RequestBody SignupRequest signupRequest) {
+	public SignupResponse signup(@Valid @RequestBody SignupRequest signupRequest) {
 		return authService.signup(signupRequest);
 	}
 

@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.rentals_backend.dto.ApiMessageResponse;
+import com.example.rentals_backend.dto.RentalDetailResponse;
 import com.example.rentals_backend.dto.RentalResponse;
-import com.example.rentals_backend.entity.RentalEntity;
+import com.example.rentals_backend.dto.RentalsResponse;
 import com.example.rentals_backend.service.RentalService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,19 +38,20 @@ public class RentalController {
 
 	@Operation(summary = "Get all rentals", description = "Get all rentals")
 	@GetMapping
-	public List<RentalResponse> getAllRentals() {
-		return rentalService.getAllRentals();
+	public RentalsResponse getAllRentals() {
+		List<RentalResponse> rentals = rentalService.getAllRentals();
+		return new RentalsResponse(rentals);
 	}
 
 	@Operation(summary = "Get rental by id", description = "Get rental by id")
 	@GetMapping("/{id}")
-	public RentalResponse getRentalById(@PathVariable Long id) {
+	public RentalDetailResponse getRentalById(@PathVariable Long id) {
 		return rentalService.getRentalById(id);
 	}
 
 	@Operation(summary = "Create rental", description = "Create rental")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public RentalResponse createRental(
+	public ApiMessageResponse createRental(
 			@RequestParam String name,
 			@RequestParam int surface,
 			@RequestParam int price,
@@ -58,14 +61,13 @@ public class RentalController {
 
 		String email = jwt.getSubject();
 
-		RentalEntity rental = rentalService.createRental(email, name, surface, price, picture, description);
-		return new RentalResponse(rental.getId(), rental.getName(), rental.getSurface(), rental.getPrice(),
-				rental.getPicture(), rental.getDescription());
+		rentalService.createRental(email, name, surface, price, picture, description);
+		return new ApiMessageResponse("Rental created !");
 	}
 
 	@Operation(summary = "Update rental", description = "Update rental")
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public RentalResponse updateRental(
+	public ApiMessageResponse updateRental(
 			@PathVariable Long id,
 			@RequestParam String name,
 			@RequestParam int surface,
@@ -73,8 +75,7 @@ public class RentalController {
 			@RequestParam(required = false) MultipartFile picture,
 			@RequestParam String description) {
 
-		RentalEntity rental = rentalService.updateRental(id, name, surface, price, picture, description);
-		return new RentalResponse(rental.getId(), rental.getName(), rental.getSurface(), rental.getPrice(),
-				rental.getPicture(), rental.getDescription());
+		rentalService.updateRental(id, name, surface, price, picture, description);
+		return new ApiMessageResponse("Rental updated !");
 	}
 }

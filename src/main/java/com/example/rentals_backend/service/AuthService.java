@@ -1,14 +1,13 @@
 package com.example.rentals_backend.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.rentals_backend.config.SecurityConfig;
 import com.example.rentals_backend.dto.LoginRequest;
@@ -40,17 +39,13 @@ public class AuthService {
 	public LoginResponse login(LoginRequest loginRequest) {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
-						loginRequest.getLogin(),
+						loginRequest.getEmail(),
 						loginRequest.getPassword()));
 
 		return new LoginResponse(jwtTokenService.generateToken(authentication));
 	}
 
 	public SignupResponse signup(SignupRequest signupRequest) {
-		if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
-		}
-
 		UserEntity user = new UserEntity();
 		user.setEmail(signupRequest.getEmail());
 		user.setName(signupRequest.getName());
@@ -59,12 +54,26 @@ public class AuthService {
 		user.setUpdatedAt(LocalDateTime.now());
 		userRepository.save(user);
 
-		return new SignupResponse(user.getId(), user.getEmail(), user.getName());
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+						signupRequest.getEmail(),
+						signupRequest.getPassword()));
+
+		return new SignupResponse(jwtTokenService.generateToken(authentication));
 	}
 
 	public MeResponse me(String username) {
 		UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		return new MeResponse(user.getId(), user.getEmail(), user.getName());
+		return new MeResponse(
+				user.getId(),
+				user.getName(),
+				user.getEmail(),
+				toLocalDate(user.getCreatedAt()),
+				toLocalDate(user.getUpdatedAt()));
  
+	}
+
+	private static LocalDate toLocalDate(LocalDateTime value) {
+		return value == null ? null : value.toLocalDate();
 	}
 }
