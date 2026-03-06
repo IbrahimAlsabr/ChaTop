@@ -1,12 +1,22 @@
 package com.example.rentals_backend.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.rentals_backend.dto.RentalDetailResponse;
 import com.example.rentals_backend.dto.RentalResponse;
@@ -21,6 +31,12 @@ public class RentalService {
 
 	private final RentalRepository rentalRepository;
 	private final UserRepository userRepository;
+
+	@Value("${app.upload.dir:uploads}")
+	private String uploadDir;
+
+	@Value("${app.public-base-url:http://localhost:8080}")
+	private String publicBaseUrl;
 
 	public RentalService(RentalRepository rentalRepository, UserRepository userRepository) {
 		this.userRepository = userRepository;
@@ -37,7 +53,7 @@ public class RentalService {
 							rental.getName(),
 							rental.getSurface(),
 							(int) rental.getPrice(),
-							rental.getPicture(),
+							toPictureUrl(rental.getPicture()),
 							rental.getDescription(),
 							rental.getOwner() == null ? null : rental.getOwner().getId(),
 							toLocalDate(rental.getCreatedAt()),
@@ -55,7 +71,7 @@ public class RentalService {
 				rental.getName(),
 				rental.getSurface(),
 				(int) rental.getPrice(),
-				rental.getPicture() == null ? List.of() : List.of(rental.getPicture()),
+				rental.getPicture() == null ? List.of() : List.of(toPictureUrl(rental.getPicture())),
 				rental.getDescription(),
 				rental.getOwner() == null ? null : rental.getOwner().getId(),
 				toLocalDate(rental.getCreatedAt()),
@@ -81,10 +97,10 @@ public class RentalService {
 		rental.setUpdatedAt(LocalDateTime.now());
 
 		if (picture != null && !picture.isEmpty()) {
-			rental.setPicture("uploads/" + picture.getOriginalFilename());
+			rental.setPicture(storePicture(picture));
 		}
 
-		return rentalRepository.save(rental); 
+		return rentalRepository.save(rental);
 	}
 
 	public RentalEntity createRental(
@@ -102,11 +118,42 @@ public class RentalService {
 		rental.setDescription(description);
 		rental.setCreatedAt(LocalDateTime.now());
 		rental.setUpdatedAt(LocalDateTime.now());
-		if (picture != null && !picture.isEmpty()) {
-			rental.setPicture("uploads/" + picture.getOriginalFilename());
+		if (picture == null || picture.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Picture is required");
 		}
+		rental.setPicture(storePicture(picture));
 
 		return rentalRepository.save(rental);
+	}
+
+	private String storePicture(MultipartFile picture) {
+		try {
+			Path uploadPath = Paths.get(uploadDir);
+			Files.createDirectories(uploadPath);
+
+			String originalFilename = StringUtils.cleanPath(
+					picture.getOriginalFilename() == null ? "picture" : picture.getOriginalFilename());
+			String extension = StringUtils.getFilenameExtension(originalFilename);
+			String fileName = extension == null || extension.isBlank()
+					? UUID.randomUUID().toString()
+					: UUID.randomUUID() + "." + extension;
+			Path destination = uploadPath.resolve(fileName);
+			Files.copy(picture.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+
+			return "/uploads/" + fileName;
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to store picture", e);
+		}
+	}
+
+	private String toPictureUrl(String picturePath) {
+		if (picturePath == null || picturePath.isBlank()) {
+			return picturePath;
+		}
+		if (picturePath.startsWith("http://") || picturePath.startsWith("https://")) {
+			return picturePath;
+		}
+		return publicBaseUrl + picturePath;
 	}
 
 	private static LocalDate toLocalDate(LocalDateTime value) {

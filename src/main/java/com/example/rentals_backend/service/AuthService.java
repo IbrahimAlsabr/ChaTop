@@ -63,14 +63,15 @@ public class AuthService {
 	}
 
 	public MeResponse me(String username) {
-		UserEntity user = userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		UserEntity user = userRepository.findByEmail(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		return new MeResponse(
 				user.getId(),
 				user.getName(),
 				user.getEmail(),
 				toLocalDate(user.getCreatedAt()),
 				toLocalDate(user.getUpdatedAt()));
- 
+
 	}
 
 	private static LocalDate toLocalDate(LocalDateTime value) {

@@ -55,7 +55,7 @@ public class RentalController {
 			@RequestParam String name,
 			@RequestParam int surface,
 			@RequestParam int price,
-			@RequestParam(required = false) MultipartFile picture,
+			@RequestParam MultipartFile picture,
 			@RequestParam String description,
 			@AuthenticationPrincipal Jwt jwt) {
 

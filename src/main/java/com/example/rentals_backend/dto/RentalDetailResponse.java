@@ -44,4 +44,3 @@ public class RentalDetailResponse {
 	@Schema(description = "The date when the rental was last updated.", example = "2014/12/02")
 	private LocalDate updated_at;
 }
-
